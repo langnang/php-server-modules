@@ -3,6 +3,7 @@
 use Langnang\Module\Meta\Meta;
 use Langnang\Module\Mock\Mock;
 
+header("refresh: 2");
 
 require_once __DIR__ . '/../main.test.php';
 
