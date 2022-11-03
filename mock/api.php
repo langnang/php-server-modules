@@ -60,8 +60,7 @@ $router->addGroup("/mock", function (FastRoute\RouteCollector $router) {
     $method = $vars['method'];
     $value = $_FAKER->{$vars['method']}();
     $controller->insert_item([
-      "title" => "faker_{$method}",
-      "type" => "mock",
+      "type" => "{$method}",
       "text" => $value,
     ]);
     return ["method" => $method, "value" => $value];
