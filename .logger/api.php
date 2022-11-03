@@ -16,13 +16,6 @@ require_once __DIR__ . '/controllers.php';
 $router->addGroup("/logger", function (FastRoute\RouteCollector $router) {
   $controller = new Logger();
   /**
-   * @OA\Get(
-   *     path="/api/logger/config",
-   *     @OA\Response(response="200", description="")
-   * )
-   */
-  $router->addRoute('GET', '/config', [$controller, 'get__table']);
-  /**
    * @OA\Post(
    *     path="/api/logger/insert",
    *     @OA\RequestBody(

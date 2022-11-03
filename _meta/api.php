@@ -16,13 +16,6 @@ require_once __DIR__ . '/controllers.php';
 $router->addGroup("/meta", function (FastRoute\RouteCollector $router) {
   $controller = new Meta();
   /**
-   * @OA\Get(
-   *     path="/api/meta/config",
-   *     @OA\Response(response="200", description="")
-   * )
-   */
-  $router->addRoute('GET', '/config', [$controller, 'get__table']);
-  /**
    * @OA\Post(
    *     path="/api/meta/insert",
    *     @OA\RequestBody(

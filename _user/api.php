@@ -16,13 +16,6 @@ require_once __DIR__ . '/controllers.php';
 $router->addGroup("/user", function (FastRoute\RouteCollector $router) {
   $controller = new User();
   /**
-   * @OA\Get(
-   *     path="/api/user/config",
-   *     @OA\Response(response="200", description="")
-   * )
-   */
-  $router->addRoute('GET', '/config', [$controller, 'get__table']);
-  /**
    * @OA\Post(
    *     path="/api/user/insert",
    *     @OA\RequestBody(

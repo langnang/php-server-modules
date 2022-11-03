@@ -3,20 +3,25 @@
   "columns": [
     {
       "name": "id",
-      "type": "int(10)"
+      "type": "int(10)",
+      "comment": "序号"
     },
     {
-      "name": "text"
+      "name": "text",
+      "type": "text",
+      "comment": "内容"
     },
     {
-      "name": "type"
+      "name": "type",
+      "type": "varchar(32)"
     },
     {
-      "name": "author"
+      "name": "author",
+      "type": "varchar(32)"
     },
     {
       "name": "create_time",
-      "type": "int(13)"
+      "type": "timestamp"
     }
   ]
 }
