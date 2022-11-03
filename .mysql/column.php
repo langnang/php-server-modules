@@ -2,6 +2,7 @@
 
 namespace Langnang\SqlGenerator\MySqlGenerator;
 
+require_once __DIR__ . '/../.root/models.php';
 require_once __DIR__ . '/../.root/controllers.php';
 
 use Langnang\Module\Root\RootModel;

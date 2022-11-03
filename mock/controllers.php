@@ -4,6 +4,7 @@ namespace Langnang\Module\Mock;
 
 use Langnang\Module\Root\RootController;
 
+require_once __DIR__ . '/../.root/controllers.php';
 require_once __DIR__ . '/models.php';
 require_once __DIR__ . '/interfaces.php';
 

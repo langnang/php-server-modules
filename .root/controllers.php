@@ -5,6 +5,7 @@ namespace Langnang\Module\Root;
 use Exception;
 use Langnang\SqlGenerator\MySqlGenerator\MySqlTable;
 
+require_once __DIR__ . '/../.mysql/mysql.php';
 require_once __DIR__ . '/interfaces.php';
 require_once __DIR__ . '/models.php';
 
