@@ -55,16 +55,6 @@
       "length": 10,
       "default": 0,
       "comment": "父本"
-    },
-    {
-      "table": "_relationships",
-      "name": "cids",
-      "on": "mid"
-    },
-    {
-      "table": "_relationships",
-      "name": "mid",
-      "on": "mid"
     }
   ],
   "left_joins": [
@@ -77,9 +67,7 @@
       "join": "left"
     }
   ],
-  "addition_columns": [
-    { "table": "_relationships", "name": "cid", "as": "cids" }
-  ],
+  "addition_columns": [{ "table": "_relationships", "name": "cid", "as": "cids" }],
   "primary_keys": ["mid"],
   "foreign_keys": [],
   "data": [
