@@ -1,8 +1,8 @@
 {
-  "name": "_contents",
+  "name": "mock",
   "columns": [
     {
-      "name": "cid",
+      "name": "id",
       "type": "int",
       "auto_increment": true,
       "unsigned": true,
@@ -10,13 +10,6 @@
       "comment": "序号",
       "condition": "= ?",
       "order": -1
-    },
-    {
-      "name": "title",
-      "type": "varchar",
-      "length": 255,
-      "comment": "标题",
-      "condition": "LIKE '%?%'"
     },
     {
       "name": "text",
@@ -30,7 +23,7 @@
     }
   ],
   "addition_columns": [],
-  "primary_keys": ["cid"],
+  "primary_keys": ["id"],
   "foreign_keys": [],
   "data": []
 }

@@ -28,7 +28,7 @@ $router->addGroup("/mock", function (FastRoute\RouteCollector $router) {
     $meta_controller = new Meta();
     $funcs = $meta_controller->select_count([
       'type' => "option",
-      'slug' => 'faker.function',
+      'slug' => 'mock.type',
       'size' => PHP_INT_MAX,
       'columns' => ['name']
     ]);
@@ -38,8 +38,7 @@ $router->addGroup("/mock", function (FastRoute\RouteCollector $router) {
     $method = $_FAKER->randomElement($funcs);
     $value = $_FAKER->{$method}();
     $controller->insert_item([
-      "title" => "faker_{$method}",
-      "type" => "mock",
+      "type" => "{$method}",
       "text" => $value,
     ]);
     return ["method" => $method, "value" => $value];

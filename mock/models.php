@@ -13,17 +13,12 @@ class MockModel
    */
   public $cid;
   /**
-   * @OA\Property(default="faker")
-   * @var string
-   */
-  public $title;
-  /**
    * @OA\Property()
    * @var string
    */
   public $text;
   /**
-   * @OA\Property(default="mock")
+   * @OA\Property(default=NULL)
    * @var string
    */
   public $type;
