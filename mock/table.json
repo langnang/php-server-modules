@@ -1,0 +1,36 @@
+{
+  "name": "_contents",
+  "columns": [
+    {
+      "name": "cid",
+      "type": "int",
+      "auto_increment": true,
+      "unsigned": true,
+      "length": 10,
+      "comment": "序号",
+      "condition": "= ?",
+      "order": -1
+    },
+    {
+      "name": "title",
+      "type": "varchar",
+      "length": 255,
+      "comment": "标题",
+      "condition": "LIKE '%?%'"
+    },
+    {
+      "name": "text",
+      "type": "longtext",
+      "comment": "内容"
+    },
+    {
+      "name": "type",
+      "comment": "类型",
+      "condition": "= '?'"
+    }
+  ],
+  "addition_columns": [],
+  "primary_keys": ["cid"],
+  "foreign_keys": [],
+  "data": []
+}

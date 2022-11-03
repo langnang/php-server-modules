@@ -1,0 +1,73 @@
+{
+  "name": "_contents",
+  "columns": [
+    {
+      "name": "cid",
+      "type": "int",
+      "auto_increment": true,
+      "unsigned": true,
+      "length": 10,
+      "comment": "序号",
+      "condition": "= ?"
+    },
+    {
+      "name": "title",
+      "type": "varchar",
+      "length": 255,
+      "comment": "标题",
+      "condition": "LIKE '%?%'"
+    },
+    {
+      "name": "slug",
+      "type": "varchar",
+      "length": 255,
+      "comment": "编码",
+      "condition": "= '?'"
+    },
+    {
+      "name": "created",
+      "comment": "创建时间"
+    },
+    {
+      "name": "modified",
+      "comment": "修改时间"
+    },
+    {
+      "name": "text",
+      "type": "longtext",
+      "comment": "内容"
+    },
+    {
+      "name": "order",
+      "type": "int",
+      "unsigned": true,
+      "length": 2,
+      "default": 0,
+      "comment": "排序"
+    },
+    {
+      "name": "type",
+      "comment": "类型",
+      "condition": "= '?'"
+    },
+    {
+      "name": "status",
+      "comment": "状态",
+      "condition": "= '?'"
+    },
+    {
+      "name": "parent",
+      "type": "int",
+      "unsigned": true,
+      "length": 10,
+      "default": 0,
+      "comment": "父本"
+    }
+  ],
+  "addition_columns": [],
+  "primary_keys": [
+    "cid"
+  ],
+  "foreign_keys": [],
+  "data": []
+}

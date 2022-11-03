@@ -1,0 +1,115 @@
+{
+  "name": "_metas",
+  "columns": [
+    {
+      "name": "mid",
+      "type": "int",
+      "auto_increment": true,
+      "unsigned": true,
+      "length": 10,
+      "comment": "序号",
+      "condition": "= ?"
+    },
+    {
+      "name": "name",
+      "type": "varchar",
+      "length": 255,
+      "comment": "名称",
+      "condition": "= '?'"
+    },
+    {
+      "name": "slug",
+      "type": "varchar",
+      "length": 255,
+      "comment": "编码",
+      "condition": "= '?'"
+    },
+    {
+      "name": "type",
+      "type": "varchar",
+      "length": 255,
+      "not_null": true,
+      "default": "option",
+      "comment": "类型",
+      "condition": "= '?'",
+      "options": ["option", "category", "tag"]
+    },
+    {
+      "name": "description",
+      "type": "varchar",
+      "length": 255,
+      "comment": "描述"
+    },
+    {
+      "name": "order",
+      "type": "int",
+      "unsigned": true,
+      "length": 2,
+      "default": 0,
+      "comment": "排序"
+    },
+    {
+      "name": "parent",
+      "type": "int",
+      "unsigned": true,
+      "length": 10,
+      "default": 0,
+      "comment": "父本"
+    },
+    {
+      "table": "_relationships",
+      "name": "cids",
+      "on": "mid"
+    },
+    {
+      "table": "_relationships",
+      "name": "mid",
+      "on": "mid"
+    }
+  ],
+  "left_joins": [
+    {
+      "name": "_relationships",
+      "columns": [
+        { "name": "cid", "type": "int", "on": "cid" },
+        { "name": "mid", "type": "int", "as": "mids", "concat": "','" }
+      ],
+      "join": "left"
+    }
+  ],
+  "addition_columns": [
+    { "table": "_relationships", "name": "cid", "as": "cids" }
+  ],
+  "primary_keys": ["mid"],
+  "foreign_keys": [],
+  "data": [
+    {
+      "mid": 1,
+      "name": "option",
+      "slug": "default",
+      "type": "option",
+      "description": "选项"
+    },
+    {
+      "mid": 2,
+      "name": "category",
+      "slug": "default",
+      "type": "option",
+      "description": "分类"
+    },
+    {
+      "mid": 3,
+      "name": "tag",
+      "slug": "default",
+      "type": "option",
+      "description": "标签"
+    },
+    {
+      "mid": 4,
+      "name": "config",
+      "slug": "default",
+      "type": "option",
+      "description": "配置"
+    }
+  ]
+}

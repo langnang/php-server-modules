@@ -1,0 +1,39 @@
+{
+  "name": "_contents",
+  "columns": [
+    {
+      "name": "cid",
+      "type": "int",
+      "auto_increment": true,
+      "unsigned": true,
+      "length": 10,
+      "comment": "序号",
+      "condition": "= ?",
+      "order": -1
+    },
+    {
+      "name": "title",
+      "type": "varchar",
+      "length": 255,
+      "comment": "标题",
+      "condition": "LIKE '%?%'"
+    },
+    {
+      "name": "text",
+      "type": "longtext",
+      "comment": "内容",
+      "decode": "json_decode(true)",
+      "encode": "json_decode"
+    },
+    {
+      "name": "type",
+      "comment": "类型",
+      "condition": "= '?'"
+    },
+    { "name": "parent", "type": "int" }
+  ],
+  "addition_columns": [],
+  "primary_keys": ["cid"],
+  "foreign_keys": [],
+  "data": []
+}

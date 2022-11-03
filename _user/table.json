@@ -1,0 +1,4 @@
+{
+  "name": "_users",
+  "columns": [{ "name": "id", "type": "int(10)" }]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "quote",
+  "columns": [
+    {
+      "name": "id",
+      "type": "int(10)"
+    },
+    {
+      "name": "text"
+    },
+    {
+      "name": "type"
+    },
+    {
+      "name": "author"
+    },
+    {
+      "name": "create_time",
+      "type": "int(13)"
+    }
+  ]
+}

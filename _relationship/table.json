@@ -1,0 +1,26 @@
+{
+  "name": "_relationships",
+  "columns": [
+    {
+      "name": "cid",
+      "type": "int",
+      "condition": "= ?",
+      "foreign_key": {
+        "table": "_contents",
+        "name": "cid",
+        "type": "int"
+      }
+    },
+    {
+      "name": "mid",
+      "type": "int",
+      "condition": "= ?",
+      "foreign_key": {
+        "table": "_metas",
+        "name": "cid",
+        "type": "int"
+      }
+    }
+  ],
+  "primary_keys": ["cid", "mid"]
+}

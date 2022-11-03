@@ -1,0 +1,55 @@
+{
+  "name": "log",
+  "columns": [
+    {
+      "name": "id",
+      "type": "bigint",
+      "length": 20,
+      "comment": "编号",
+      "order": -1
+    },
+    {
+      "name": "channel",
+      "type": "varchar",
+      "length": 255,
+      "condition": "= '?'"
+    },
+    {
+      "name": "level",
+      "type": "int",
+      "length": 11,
+      "condition": "= ?"
+    },
+    {
+      "name": "message",
+      "type": "longtext"
+    },
+    {
+      "name": "time",
+      "type": "int",
+      "length": 10,
+      "order": -1
+    },
+    {
+      "name": "var",
+      "condition": "= '?'"
+    },
+    {
+      "name": "value",
+      "condition": "= '?'"
+    },
+    {
+      "name": "uuid",
+      "condition": "= '?'"
+    },
+    {
+      "name": "timestamp",
+      "type": "int",
+      "condition": "= '?'",
+      "order": -1
+    }
+  ],
+  "primary_keys": [
+    "id"
+  ]
+}

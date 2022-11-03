@@ -1,0 +1,85 @@
+{
+  "schema": {
+    "name": "__mysql_schemas__",
+    "columns": [
+      {
+        "name": "host"
+      },
+      {
+        "name": "port"
+      }
+    ],
+    "addition_columns": []
+  },
+  "table": {
+    "name": "__mysql_tables__",
+    "columns": [],
+    "addition_columns": []
+  },
+  "index": {
+    "name": "__mysql_tables__"
+  },
+  "foreign_key": {
+    "name": "__mysql_foreign_keys__"
+  },
+  "trigger": {
+    "name": "__mysql_triggers__"
+  },
+  "column": {
+    "name": "__mysql_columns__",
+    "columns": [
+      {
+        "name": "host"
+      },
+      {
+        "name": "type",
+        "options": {
+          "number": [
+            "TINYINT",
+            "SMALLINT",
+            "MEDIUMINT",
+            "INT",
+            "INTEGER",
+            "BIGINT",
+            "FLOAT",
+            "DOUBLE",
+            "DECIMAL"
+          ],
+          "datetime": [
+            "DATE",
+            "TIME",
+            "YEAR",
+            "DATETIME",
+            "TIMESTAMP"
+          ],
+          "string": [
+            "CHAR",
+            "VARCHAR",
+            "TINYBLOB",
+            "TINYTEXT",
+            "BLOB",
+            "TEXT",
+            "MEDIUMBLOB",
+            "MEDIUMTEXT",
+            "LONGBLOB",
+            "LONGTEXT"
+          ]
+        }
+      }
+    ],
+    "addition_columns": []
+  },
+  "meta": {
+    "name": "__mysql_metas__",
+    "columns": [],
+    "data": [
+      {
+        "id": 0,
+        "name": "",
+        "slug": "",
+        "type": "",
+        "description": ""
+      }
+    ]
+  }
+}

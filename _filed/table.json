@@ -1,0 +1,19 @@
+{
+  "name": "fields",
+  "columns": [
+    {
+      "name": "cid",
+      "type": "int"
+    },
+    {
+      "name": "type"
+    },
+    {
+      "name": "value"
+    }
+  ],
+  "primary_keys": [
+    "cid",
+    "name"
+  ]
+}
