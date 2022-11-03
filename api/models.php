@@ -15,7 +15,7 @@ class ApiModel extends RootModel
    * @OA\Property()
    * @var int
    */
-  public $cid;
+  public $id;
   /**
    * @OA\Property()
    * @var string
@@ -26,6 +26,16 @@ class ApiModel extends RootModel
    * @var string
    */
   public $method;
+  /**
+   * @OA\Property()
+   * @var string
+   */
+  public $header;
+  /**
+   * @OA\Property()
+   * @var string
+   */
+  public $data;
   /**
    * @OA\Property()
    * @var string

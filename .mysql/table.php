@@ -369,6 +369,10 @@ VALUES
         return $t . ", `{$v}`";
       }, ""), 2);
   }
+  function generate_select_rand(array $row): string
+  {
+    return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} {$this->generate_sort_order()} ORDER BY RAND() LIMIT 1 ";
+  }
 
   // 生成条件语句
   function generate_where_condition($row): string

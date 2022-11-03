@@ -1,8 +1,8 @@
 {
-  "name": "_contents",
+  "name": "apis",
   "columns": [
     {
-      "name": "cid",
+      "name": "id",
       "type": "int",
       "auto_increment": true,
       "unsigned": true,
@@ -12,16 +12,26 @@
       "order": -1
     },
     {
-      "name": "title",
+      "name": "url",
+      "type": "varchar",
+      "length": 255
+    },
+    {
+      "name": "method",
       "type": "varchar",
       "length": 255,
       "comment": "标题",
-      "condition": "LIKE '%?%'"
+      "condition": "= '?'"
     },
     {
-      "name": "text",
-      "type": "longtext",
-      "comment": "内容",
+      "name": "header",
+      "type": "text",
+      "decode": "json_decode(true)",
+      "encode": "json_decode"
+    },
+    {
+      "name": "data",
+      "type": "text",
       "decode": "json_decode(true)",
       "encode": "json_decode"
     },
@@ -30,10 +40,13 @@
       "comment": "类型",
       "condition": "= '?'"
     },
-    { "name": "parent", "type": "int" }
+    {
+      "name": "description",
+      "comment": "类型"
+    }
   ],
   "addition_columns": [],
-  "primary_keys": ["cid"],
+  "primary_keys": ["id"],
   "foreign_keys": [],
   "data": []
 }

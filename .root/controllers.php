@@ -224,7 +224,7 @@ class RootController extends RootModel
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
 
-    $sql_select_item = $this->_table->generate_select_list($vars);
+    $sql_select_item = $this->_table->generate_select_item($vars);
     $_API_LOGGER->debug(__METHOD__, array('var' => 'sql_select_item', 'value'  => $sql_select_item, "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
 
     $row = $_CONNECTION->fetchAssociative($sql_select_item);
@@ -245,6 +245,35 @@ class RootController extends RootModel
     if ($this->_table->primary_key_exists($vars) !== true) throw new Exception("empty primary key ({$this->_table->primary_key_exists($vars)}) value.");
 
     $result = $this->execute_select_item($vars);
+    $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+    return $result;
+  }
+  // 执行操作>>单条查询
+  function execute_select_rand(array $vars)
+  {
+    global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+
+    $sql_select_rand = $this->_table->generate_select_rand($vars);
+    $_API_LOGGER->debug(__METHOD__, array('var' => 'sql_select_item', 'value'  => $sql_select_rand, "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    $row = $_CONNECTION->fetchAssociative($sql_select_rand);
+    $_API_LOGGER->debug(__METHOD__, array('var' => 'execute::sql_select_rand', 'value'  => json_encode($row), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    // 查询失败，没有对应数据
+    if ($row === false) throw new Exception("no such row.");
+
+    $result = $this->get_row($row, $vars, $vars);
+    $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    return $result;
+  }
+  function select_rand(array $vars)
+  {
+    global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    // 检测 primary_keys
+    // if ($this->_table->primary_key_exists($vars) !== true) throw new Exception("empty primary key ({$this->_table->primary_key_exists($vars)}) value.");
+
+    $result = $this->execute_select_rand($vars);
     $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
     return $result;
   }

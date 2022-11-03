@@ -17,32 +17,7 @@ require_once __DIR__ . '/controllers.php';
  */
 $router->addGroup("/mock", function (FastRoute\RouteCollector $router) {
   $controller = new Mock();
-  /**
-   * @OA\Get(
-   *     path="/api/mock/faker/random",
-   *     @OA\Response(response="200", description="")
-   * )
-   */
-  $router->addRoute('GET', '/faker/random', function ($vars) use ($controller) {
-    global $_FAKER;
-    $meta_controller = new Meta();
-    $funcs = $meta_controller->select_count([
-      'type' => "option",
-      'slug' => 'mock.type',
-      'size' => PHP_INT_MAX,
-      'columns' => ['name']
-    ]);
-    $funcs = array_map(function ($item) {
-      return $item['name'];
-    }, $funcs['rows']);
-    $method = $_FAKER->randomElement($funcs);
-    $value = $_FAKER->{$method}();
-    $controller->insert_item([
-      "type" => "{$method}",
-      "text" => $value,
-    ]);
-    return ["method" => $method, "value" => $value];
-  });
+
   /**
    * @OA\Get(
    *     path="/api/mock/faker/{method}",
@@ -142,4 +117,25 @@ $router->addGroup("/mock", function (FastRoute\RouteCollector $router) {
    * )
    */
   $router->addRoute('POST', '/info', [$controller, 'select_item']);
+  /**
+   * @OA\Get(
+   *     path="/api/mock/rand",
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('GET', '/rand', function ($vars) use ($controller) {
+    global $_FAKER;
+    $meta_controller = new Meta();
+    $row = $meta_controller->select_rand([
+      'type' => "option",
+      'slug' => 'mock.type',
+    ]);
+    $method = $row['name'];
+    $value = $_FAKER->{$method}();
+    $controller->insert_item([
+      "type" => "{$method}",
+      "text" => $value,
+    ]);
+    return ["method" => $method, "value" => $value];
+  });
 });

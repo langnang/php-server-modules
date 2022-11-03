@@ -92,4 +92,11 @@ $router->addGroup("/meta", function (FastRoute\RouteCollector $router) {
    * )
    */
   $router->addRoute('POST', '/info', [$controller, 'select_item']);
+  /**
+   * @OA\Post(
+   *     path="/api/meta/rand",
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('POST', '/rand', [$controller, 'select_rand']);
 });
