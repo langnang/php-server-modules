@@ -4,7 +4,7 @@ use Langnang\Module\Meta\Meta;
 use Langnang\Module\Mock\Mock;
 
 
-require_once __DIR__ . '/../.test.php';
+require_once __DIR__ . '/../main.test.php';
 
 $controller = new Mock();
 
