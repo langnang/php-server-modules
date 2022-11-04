@@ -35,5 +35,5 @@ class QuoteModel extends RootModel
    * @OA\Property()
    * @var int
    */
-  public $create_time;
+  public $created;
 }

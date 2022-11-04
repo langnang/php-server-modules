@@ -1,8 +1,8 @@
 {
-  "name": "apis",
+  "name": "_contents",
   "columns": [
     {
-      "name": "id",
+      "name": "cid",
       "type": "int",
       "auto_increment": true,
       "unsigned": true,
@@ -12,41 +12,56 @@
       "order": -1
     },
     {
-      "name": "url",
-      "type": "varchar",
-      "length": 255
+      "name": "title",
+      "type": "varchar(150)"
     },
     {
-      "name": "method",
-      "type": "varchar",
-      "length": 255,
-      "comment": "标题",
-      "condition": "= '?'"
+      "name": "slug",
+      "type": "varchar(150)",
+      "condition": "LIKE '?%'",
+      "decode": "explode(_)"
     },
     {
-      "name": "header",
-      "type": "text",
+      "name": "created",
+      "type": "int(10)"
+    },
+    {
+      "name": "modified",
+      "type": "int(10)"
+    },
+    {
+      "name": "text",
+      "type": "longtext",
       "decode": "json_decode(true)",
       "encode": "json_decode"
     },
     {
-      "name": "data",
-      "type": "text",
-      "decode": "json_decode(true)",
-      "encode": "json_decode"
+      "name": "order",
+      "type": "int(10)"
+    },
+    {
+      "name": "authorId",
+      "type": "int(10)"
+    },
+    {
+      "name": "template"
     },
     {
       "name": "type",
+      "type": "varchar(16)",
+      "default": "api",
       "comment": "类型",
-      "condition": "= '?'"
+      "condition": "= 'api'"
     },
     {
-      "name": "description",
-      "comment": "类型"
-    }
+      "name": "status",
+      "type": "varchar(16)",
+      "comment": "状态"
+    },
+    { "name": "parent", "type": "int(10)", "default": 0 }
   ],
   "addition_columns": [],
-  "primary_keys": ["id"],
+  "primary_keys": ["cid"],
   "foreign_keys": [],
   "data": []
 }

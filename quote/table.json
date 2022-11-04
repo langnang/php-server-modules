@@ -1,10 +1,11 @@
 {
-  "name": "quote",
+  "name": "quotes",
   "columns": [
     {
       "name": "id",
       "type": "int(10)",
-      "comment": "序号"
+      "comment": "序号",
+      "order": -1
     },
     {
       "name": "text",

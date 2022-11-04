@@ -245,6 +245,7 @@ class RootController extends RootModel
     // 查询失败，没有对应数据
     if ($row === false) throw new Exception("no such row.");
 
+    $row = $this->_table->get_row($row);
     $result = $this->get_row($row, $vars, $vars);
     $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
 
@@ -275,6 +276,7 @@ class RootController extends RootModel
     // 查询失败，没有对应数据
     if ($row === false) throw new Exception("no such row.");
 
+    $row = $this->_table->get_row($row);
     $result = $this->get_row($row, $vars, $vars);
     $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
 

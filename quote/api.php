@@ -3,7 +3,10 @@ global $_SWAGGER;
 $module = "quote";
 array_push($_SWAGGER, ["name" => "{$module}", "url" => "/?/api/swagger/{$module}", "path" => __DIR__]);
 
+use Langnang\Module\Api\Api;
+use Langnang\Module\Content\Content;
 use Langnang\Module\Quote\Quote;
+use WpOrg\Requests\Requests;
 
 require_once __DIR__ . '/controllers.php';
 /**
@@ -15,17 +18,6 @@ require_once __DIR__ . '/controllers.php';
  */
 $router->addGroup("/{$module}", function (FastRoute\RouteCollector $router) {
   $controller = new Quote();
-  /**
-   * @OA\Post(
-   *     path="/api/quote/table",
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/QuoteModel")
-   *     ),     
-   *     @OA\Response(response="200", description="")
-   * )
-   */
-  $router->addRoute('POST', '/table', [$controller, 'get__table']);
   /**
    * @OA\Post(
    *     path="/api/quote/insert",
@@ -103,4 +95,29 @@ $router->addGroup("/{$module}", function (FastRoute\RouteCollector $router) {
    * )
    */
   $router->addRoute('POST', '/info', [$controller, 'select_item']);
+  /**
+   * @OA\Get(
+   *     path="/api/quote/rand",
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('GET', '/rand', function ($vars) use ($controller) {
+    global $_FAKER;
+    $meta_controller = new Api();
+    $row = $meta_controller->select_rand([
+      'slug' => 'quote',
+    ]);
+    $quote = [];
+    $quote['type'] = $row['slug'][1];
+
+    $response = WpOrg\Requests\Requests::{$row['method']}($row['url'], (array)$row['headers'], (array)$row['data']);
+    $body = json_decode($response->body, true);
+    if (!is_null($body)) $response->body = $body;
+
+    foreach ((array)$row['response'] as $key => $value) {
+      $quote[$key] = $response->{$value};
+    }
+    $controller->insert_item($quote);
+    return $quote;
+  });
 });

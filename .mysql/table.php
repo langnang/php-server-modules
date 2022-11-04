@@ -371,7 +371,7 @@ VALUES
   }
   function generate_select_rand(array $row): string
   {
-    return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} {$this->generate_sort_order()} ORDER BY RAND() LIMIT 1 ";
+    return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} ORDER BY RAND() LIMIT 1 ";
   }
 
   // 生成条件语句
@@ -381,7 +381,7 @@ VALUES
 
     foreach ($this->columns as $name => $column) {
 
-      if (!isset($row[$name]) || $row[$name] === '') continue;
+      if ((!isset($row[$name]) || empty($row[$name])) && empty($column->default)) continue;
       // 过滤空查询条件
       if (empty($column->condition)) continue;
 

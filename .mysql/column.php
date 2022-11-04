@@ -89,8 +89,7 @@ class MySqlColumn extends RootModel
   function get_type()
   {
     $list = preg_split("/(\(|\)|,| )/", $this->type);
-    var_dump($list);
-    return ["data_type" => "", "limit_length" => 0, "unsigned" => false];
+    return ["data_type" => $list[0], "max_length" => is_numeric($list[1]) ? (int)$list[1] : null, "unsigned" => null];
   }
   private $type_options = [
     "number" => ["tinyint", "smallint", "mediumint", "int", "integer", "bigint", "float", "double", "decimal"],
@@ -220,7 +219,7 @@ class MySqlColumn extends RootModel
    */
   function decode_value(string $value)
   {
-    if (in_array($this->type, $this->type_options['number'])) return (int)$value;
+    if (in_array($this->get_type()['data_type'], $this->type_options['number'])) return (int)$value;
 
     if (empty($this->decode)) return $value;
 
@@ -236,6 +235,9 @@ class MySqlColumn extends RootModel
    */
   function encode_value(mixed $value)
   {
+    if (empty($this->decode)) return $value;
+
+    return filter($value, $this->encode);
   }
 
 
