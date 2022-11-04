@@ -278,7 +278,7 @@ VALUES
           if (is_int($row[$column->name])) {
             return $total . ", {$row[$column->name]}";
           } else {
-            return $total . ", '{$row[$column->name]}'";
+            return $total . ", '" . addslashes($row[$column->name]) . "'";
           }
         }
         return $total;

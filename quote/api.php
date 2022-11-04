@@ -101,23 +101,5 @@ $router->addGroup("/{$module}", function (FastRoute\RouteCollector $router) {
    *     @OA\Response(response="200", description="")
    * )
    */
-  $router->addRoute('GET', '/rand', function ($vars) use ($controller) {
-    global $_FAKER;
-    $meta_controller = new Api();
-    $row = $meta_controller->select_rand([
-      'slug' => 'quote',
-    ]);
-    $quote = [];
-    $quote['type'] = $row['slug'][1];
-
-    $response = WpOrg\Requests\Requests::{$row['method']}($row['url'], (array)$row['headers'], (array)$row['data']);
-    $body = json_decode($response->body, true);
-    if (!is_null($body)) $response->body = $body;
-
-    foreach ((array)$row['response'] as $key => $value) {
-      $quote[$key] = $response->{$value};
-    }
-    $controller->insert_item($quote);
-    return $quote;
-  });
+  $router->addRoute('GET', '/rand', [$controller, 'crawler_rand']);
 });

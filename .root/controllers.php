@@ -108,7 +108,7 @@ class RootController extends RootModel
     return $result;
   }
   // 执行操作>>批量新增
-  function execute_insert_list(array $vars): mixed
+  function execute_insert_list(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
 
@@ -120,7 +120,7 @@ class RootController extends RootModel
 
     return $result;
   }
-  function insert_list(array $vars): mixed
+  function insert_list(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));

@@ -39,7 +39,7 @@ header("refresh: 1");
 <html>
 
 <head>
-  <title>Mock - 数据模拟</title>
+  <title>Quote - 常用语录</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style>
     body,
@@ -72,23 +72,51 @@ header("refresh: 1");
 
   while (true) {
     $row = $_FAKER->randomElement($rows);
-    $quote = [];
-    $quote['type'] = $row['slug'][1];
 
+    $result = [];
     $response = WpOrg\Requests\Requests::{$row['method']}($row['url'], (array)$row['headers'], (array)$row['data']);
     $body = json_decode($response->body, true);
     if (!is_null($body)) $response->body = $body;
 
-    foreach ((array)$row['response'] as $key => $value) {
-      $quote[$key] = $response->{$value};
+    switch ($row['response']['type']) {
+      case 'object':
+        $quote = [];
+        $quote['type'] = implode("_", array_slice($row['slug'], 1, sizeof($row['slug']) - 1));
+        foreach ((array)$row['response']['corr'] as $key => $value) {
+          $quote[$key] = $body[$value];
+        }
+        $controller->insert_item($quote);
+        $result = $quote;
+        break;
+      case 'array':
+        $quotes = array_map(function ($item) use ($row) {
+          $quote = [];
+          $quote['type'] = implode("_", array_slice($row['slug'], 1, sizeof($row['slug']) - 1));
+          foreach ((array)$row['response']['corr'] as $key => $value) {
+            $quote[$key] = $item[$value];
+          }
+          return $quote;
+        }, $body);
+        $controller->insert_list([$quotes]);
+        $result = $quotes;
+        break;
+      case 'text':
+      default:
+        $quote = [];
+        $quote['type'] = implode("_", array_slice($row['slug'], 1, sizeof($row['slug']) - 1));
+        foreach ((array)$row['response']['corr'] as $key => $value) {
+          $quote[$key] = $response->{$value};
+        }
+        $controller->insert_item($quote);
+        $result = $quote;
+        break;
     }
     // $value = json_encode($_FAKER->{$method}(), JSON_UNESCAPED_UNICODE);
   ?>
     <script language="JavaScript">
-      updateProgress('<? echo json_encode($quote, JSON_UNESCAPED_UNICODE); ?>');
+      updateProgress('<? echo addslashes(json_encode($result, JSON_UNESCAPED_UNICODE)); ?>');
     </script>
   <?php
-    $controller->insert_item($quote);
 
     flush(); //将输出发送给客户端浏览器，使其可以立即执行服务器端输出的 JavaScript 程序。 
 
@@ -96,7 +124,7 @@ header("refresh: 1");
 
     // sleep(1);// 秒级延迟 1s
 
-    usleep(0.5 * 1000 * 1000); // 微秒级延迟 0.1s
+    usleep(1 * 1000 * 1000); // 微秒级延迟 0.1s
   }
   ?>
   <?php
