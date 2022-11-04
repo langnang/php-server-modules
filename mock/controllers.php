@@ -10,9 +10,6 @@ require_once __DIR__ . '/interfaces.php';
 
 class Mock extends RootController
 {
-  function __construct(array $args = [])
-  {
-    $table = file_get_contents(__DIR__ . '/table.json');
-    $this->set__table(json_decode($table, true));
-  }
+  protected $class = __CLASS__;
+  protected $_table_path = __DIR__ . '/table.json';
 }

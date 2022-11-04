@@ -6,7 +6,7 @@ use Exception;
 
 class RootModel
 {
-  function __construct($args)
+  function __construct(array $args = [])
   {
     if (!is_array($args)) throw new Exception("empty array args.");
     foreach ($this as $name => $init_value) {
