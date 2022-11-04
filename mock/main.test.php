@@ -69,7 +69,7 @@ $rows = array_map(function ($item) {
 
   while (true) {
     $method = $_FAKER->randomElement($rows);
-    $value = $_FAKER->{$method}();
+    $value = json_encode($_FAKER->{$method}(), JSON_UNESCAPED_UNICODE);
   ?>
     <script language="JavaScript">
       updateProgress('<? echo json_encode(["method" => $method, "value" => $value], JSON_UNESCAPED_UNICODE); ?>');
