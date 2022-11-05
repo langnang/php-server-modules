@@ -186,18 +186,20 @@ class MySqlTable extends RootModel
     $this->indexes = $indexes;
   }
   /**
-   * 附加列
+   * 关联表
    * @var array
    */
-  protected $addition_columns = [];
-  function set_addition_columns($columns = [])
+  protected $relations_tables = [];
+  function set_relations_tables($tables = [])
   {
-    // $this->addition_columns = array_reduce($columns, function ($table, $item) {
-    //  $column = new MySqlColumn($item);
-    //  $table[$column->name] = $column;
-    //  return $table;
-    // }, []);
+    $this->relations_tables = array_reduce($tables, function ($relations_tables, $item) {
+      $table = new MySqlTable($item);
+      $relations_tables[$table->name] = $table;
+      return $relations_tables;
+    }, []);
   }
+  // 关联列
+  protected $relation_on = [];
   /**
    * 根据列结构生成主键列表
    */
@@ -276,9 +278,9 @@ VALUES
       substr(array_reduce($this->columns, function ($total, $column) use ($row) {
         if (!is_null($row[$column->name])) {
           if (is_int($row[$column->name])) {
-            return $total . ", {$row[$column->name]}";
+            return $total . ", {$column->encode_value($row[$column->name])}";
           } else {
-            return $total . ", '" . addslashes($row[$column->name]) . "'";
+            return $total . ", '" . addslashes($column->encode_value($row[$column->name])) . "'";
           }
         }
         return $total;
@@ -307,9 +309,9 @@ VALUES
       . substr(array_reduce($this->columns, function ($total, $column) use ($row) {
         if (!is_null($row[$column->name])) {
           if (is_int($row[$column->name])) {
-            return $total . ", `{$column->name}` = {$row[$column->name]}";
+            return $total . ", `{$column->name}` = {$column->encode_value($row[$column->name])}";
           } else {
-            return $total . ", `{$column->name}` = '{$row[$column->name]}'";
+            return $total . ", `{$column->name}` = '" . addslashes($column->encode_value($row[$column->name])) . "'";
           }
         }
         return $total;
@@ -320,7 +322,7 @@ VALUES
           if (is_int($row[$key])) {
             return $total . " AND `{$key}` = {$row[$key]}";
           } else {
-            return $total . " AND `{$key}` = '{$row[$key]}'";
+            return $total . " AND `{$key}` = '{$this->columns[$key]->encode_value($row[$key])}'";
           }
         }
         return $total;
@@ -338,7 +340,11 @@ VALUES
   {
     return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} {$this->generate_sort_order()} LIMIT 1 ";
   }
-  // 生成计数查表语句
+  /**
+   * 生成计数查表语句
+   * @param array $row
+   * @param array $columns 
+   */
   function generate_select_count($row, $columns = []): string
   {
     return "SELECT COUNT(*) AS `_count`"
@@ -346,7 +352,7 @@ VALUES
         return $t . ", `{$v}`";
       }, "")
       . " FROM `{$this->name}`"
-      . $this->generate_where_condition($row)
+      . $this->generate_where_condition($row, $columns)
       // GROUP BY
       . (empty((array)$columns) ? "" : (" GROUP BY "
         . substr(array_reduce((array)$columns, function ($t, $v) {
@@ -374,18 +380,24 @@ VALUES
     return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} ORDER BY RAND() LIMIT 1 ";
   }
 
-  // 生成条件语句
-  function generate_where_condition($row): string
+  /**
+   * 生成条件语句
+   * @param array $row 
+   * @param array $except 过滤列
+   */
+  function generate_where_condition($row, $except = []): string
   {
     $result = " WHERE 1 = 1";
 
     foreach ($this->columns as $name => $column) {
+      // 过滤条件
+      if (in_array($name, $except)) continue;
 
-      if ((!isset($row[$name]) || empty($row[$name])) && empty($column->default)) continue;
+      if (!isset($row[$name]) || empty($row[$name])) continue;
       // 过滤空查询条件
       if (empty($column->condition)) continue;
 
-      $result .= " AND `{$column->name}` " . str_replace("?", $row[$column->name], $column->condition);
+      $result .= " AND `{$name}` " . str_replace("?", $row[$name], $column->condition);
     }
 
     return $result;

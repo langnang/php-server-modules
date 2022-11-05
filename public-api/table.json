@@ -18,8 +18,7 @@
     {
       "name": "slug",
       "type": "varchar(150)",
-      "condition": "LIKE '?%'",
-      "decode": "explode(_)"
+      "condition": "LIKE '?%'"
     },
     {
       "name": "created",
@@ -33,7 +32,7 @@
       "name": "text",
       "type": "longtext",
       "decode": "json_decode(true)",
-      "encode": "json_decode"
+      "encode": "json_encode(256)"
     },
     {
       "name": "order",
@@ -60,7 +59,7 @@
     },
     { "name": "parent", "type": "int(10)", "default": 0 }
   ],
-  "addition_columns": [],
+  "relations_tables": [{ "name": "_relationships", "columns": [], "primary_keys": ["cid", "mid"], "relation_on": "" }],
   "primary_keys": ["cid"],
   "foreign_keys": [],
   "data": []

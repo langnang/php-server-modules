@@ -14,10 +14,15 @@ class Api extends RootController
   protected $_class = __CLASS__;
   protected $_table_path = __DIR__ . '/table.json';
 
+  function before($method, $vars)
+  {
+    $vars['type'] = 'api';
+    return $vars;
+  }
   function get_row($row, $fields = [], $vars = [])
   {
     unset($row['type']);
     if (!is_array($row['text'])) return $row;
-    return array_merge($row, $row['text']);
+    return array_merge($row['text'], $row);
   }
 }

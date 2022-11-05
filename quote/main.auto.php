@@ -15,10 +15,14 @@ class AutoQuoteItem extends AutometeItem
   function __construct()
   {
     $api_controller = new Api();
-    $this->options = $api_controller->select_list([
+    $options = $api_controller->select_list([
       'slug' => 'quote',
       'size' => PHP_INT_MAX,
     ])['rows'];
+    $this->options = array_map(function ($item) {
+      $item['slug'] = explode("_", $item['slug']);
+      return $item;
+    }, $options);
   }
   function start()
   {
@@ -30,7 +34,6 @@ class AutoQuoteItem extends AutometeItem
     $controller = new Quote();
 
     $row = $_FAKER->randomElement($this->options);
-
     $result = [];
     $response = WpOrg\Requests\Requests::{$row['method']}($row['url'], (array)$row['headers'], (array)$row['data']);
     $body = json_decode($response->body, true);

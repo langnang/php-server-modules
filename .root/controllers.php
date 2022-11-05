@@ -98,6 +98,7 @@ class RootController extends RootModel
   function insert_item(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
     // 删除 primary_keys
     $vars = $this->_table->unset_primary_keys($vars);
@@ -123,6 +124,7 @@ class RootController extends RootModel
   function insert_list(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
     // 接受传值，默认为$_POST[0];
     $list = $vars[0];
@@ -150,6 +152,7 @@ class RootController extends RootModel
   function delete_list(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
 
     if ($this->_table->primary_key_exists($vars) !== true) throw new Exception("empty primary key ({$this->_table->primary_key_exists($vars)}).");
@@ -178,6 +181,7 @@ class RootController extends RootModel
   function update_item(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
 
     // 检测 primary_keys
@@ -222,6 +226,7 @@ class RootController extends RootModel
   function select_count(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
 
     if (empty($vars['columns'])) throw new Exception("empty count columns.");
@@ -254,6 +259,7 @@ class RootController extends RootModel
   function select_item(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
     // 检测 primary_keys
     if ($this->_table->primary_key_exists($vars) !== true) throw new Exception("empty primary key ({$this->_table->primary_key_exists($vars)}) value.");
@@ -285,6 +291,7 @@ class RootController extends RootModel
   function select_rand(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
     // 检测 primary_keys
     // if ($this->_table->primary_key_exists($vars) !== true) throw new Exception("empty primary key ({$this->_table->primary_key_exists($vars)}) value.");
@@ -337,6 +344,7 @@ class RootController extends RootModel
   function select_list(array $vars)
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
     // 删除 primary_keys，避免info查询
     $vars = $this->_table->unset_primary_keys($vars);
@@ -346,11 +354,23 @@ class RootController extends RootModel
     return $result;
   }
 
+  // 执行操作前
+  function before($method, $vars)
+  {
+    return $vars;
+  }
+
   /**
    * 对查询后的数据处理
    */
   function get_row($row, $fields = [], $vars = [])
   {
     return $row;
+  }
+  /**
+   * 运行自动化任务
+   */
+  function automate_start()
+  {
   }
 }

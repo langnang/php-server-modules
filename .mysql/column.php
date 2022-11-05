@@ -233,7 +233,7 @@ class MySqlColumn extends RootModel
   /**
    * 根据配置的编码操作，编码传入的数据，符合数据类型
    */
-  function encode_value(mixed $value)
+  function encode_value($value)
   {
     if (empty($this->decode)) return $value;
 
