@@ -28,6 +28,17 @@ $router->addGroup("/meta", function (FastRoute\RouteCollector $router) {
   $router->addRoute('POST', '/insert', [$controller, 'insert_item']);
   /**
    * @OA\Post(
+   *     path="/api/meta/upload",
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(ref="#/components/schemas/MetaModel")
+   *     ),     
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('POST', '/upload', [$controller, 'upload_list']);
+  /**
+   * @OA\Post(
    *     path="/api/meta/delete",
    *     @OA\RequestBody(
    *         required=true,

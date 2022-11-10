@@ -2,6 +2,7 @@
 
 namespace Langnang\SqlGenerator\MySqlGenerator;
 
+use Exception;
 use Langnang\Module\Root\RootModel;
 
 require_once __DIR__ . "/column.php";
@@ -209,6 +210,11 @@ class MySqlTable extends RootModel
     return $this->primary_keys;
   }
   /**
+   * 用于查询树形数据的层次键
+   * 子健，父键
+   */
+  protected $hierarchical_keys = [];
+  /**
    * 索引
    * @var array
    */
@@ -361,6 +367,21 @@ VALUES
       ))
       . $this->generate_sort_order();
   }
+  function generate_select_tree(array $row): string
+  {
+    if (sizeof($this->hierarchical_keys) !== 2) throw new Exception("the hierarchy keys is not configured.");
+    $child_key = $this->hierarchical_keys[0];
+    $parent_key = $this->hierarchical_keys[1];
+
+    $parent = $this->columns[$parent_key]->encode_value($row[$parent_key]);
+    return "select t3.* from (
+  select t1.*,
+    if(find_in_set(`{$parent_key}`, @pids) > 0, @pids := concat(@pids, ',', `{$child_key}`), 
+    if (t1.{$child_key} = {$parent}, {$parent}, 0)) as ischild
+  from (select t.* from `{$this->name}` t) t1,
+  (select @pids :=  {$parent}) t2
+) t3 where ischild != 0 ORDER BY {$child_key}, {$parent_key}";
+  }
   // 生成
   function generate_select_concat(array $columns)
   {
@@ -393,7 +414,7 @@ VALUES
       // 过滤条件
       if (in_array($name, $except)) continue;
 
-      if (!isset($row[$name]) || empty($row[$name])) continue;
+      if (!isset($row[$name]) || empty_not_zero($row[$name])) continue;
       // 过滤空查询条件
       if (empty($column->condition)) continue;
 

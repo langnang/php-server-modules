@@ -54,7 +54,8 @@
       "unsigned": true,
       "length": 10,
       "default": 0,
-      "comment": "父本"
+      "comment": "父本",
+      "condition": "= ?"
     }
   ],
   "left_joins": [
@@ -69,6 +70,7 @@
   ],
   "addition_columns": [{ "table": "_relationships", "name": "cid", "as": "cids" }],
   "primary_keys": ["mid"],
+  "hierarchical_keys": ["mid", "parent"],
   "foreign_keys": [],
   "data": [
     {

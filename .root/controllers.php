@@ -135,6 +135,46 @@ class RootController extends RootModel
     return $result;
   }
 
+  function upload_list($vars)
+  {
+    if (!is_dir(__DIR__ . '/../../../.tmp')) {
+      mkdir(__DIR__ . '/../../../.tmp');
+    }
+    $file = $vars['_files'];
+    foreach ($vars['_files'] as $file) {
+      // $content = file_get_contents($file['tmp_name']);
+      if (!move_uploaded_file($file['tmp_name'], __DIR__ . '/../../../.tmp/' . $file['name'])) {
+        throw new Exception("Failed to move uploaded file");
+      }
+      $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xls');
+      $reader->setReadDataOnly(TRUE);
+      $spreadsheet = $reader->load(__DIR__ . '/../../../.tmp/' . $file['name']); //载入excel表格
+      $worksheet = $spreadsheet->getActiveSheet();
+      $highestRow = $worksheet->getHighestRow(); // 总行数
+      $highestColumn = $worksheet->getHighestColumn(); // 总列数
+
+      $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+      $lines = $highestRow - 2;
+      if ($lines <= 0) {
+        throw new Exception('Not have enough data.');
+      }
+      $sql = "INSERT INTO `t_student` (`name`, `chinese`, `maths`, `english`) VALUES ";
+
+      for ($row = 3; $row <= $highestRow; ++$row) {
+        $name = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //姓名
+        $chinese = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //语文
+        $maths = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //数学
+        $english = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); //外语
+
+        $sql .= "('$name','$chinese','$maths','$english'),";
+      }
+      $sql = rtrim($sql, ","); //去掉最后一个,号
+      var_dump($sql);
+    }
+    throw new Exception("method not ready.");
+  }
+
   // 执行操作>>批量查询
   function execute_delete_list(array $vars)
   {
@@ -350,6 +390,43 @@ class RootController extends RootModel
     $vars = $this->_table->unset_primary_keys($vars);
 
     $result = $this->execute_select_list($vars);
+    $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+    return $result;
+  }
+
+  function execute_select_tree($vars)
+  {
+    global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $_API_LOGGER->debug(__METHOD__, array('var' => 'vars', 'value'  => json_encode($vars), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    $sql_select_tree = $this->_table->generate_select_tree($vars);
+    $_API_LOGGER->debug(__METHOD__, array('var' => 'sql_select_tree', 'value'  => $sql_select_tree, "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    $rows = $_CONNECTION->fetchAllAssociative($sql_select_tree);
+    $_API_LOGGER->debug(__METHOD__, array('var' => 'execute::sql_select_tree', 'value'  => json_encode($rows), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    $rows = array_map(function ($item) use ($vars) {
+      $row = $this->_table->get_row($item);
+      $row = $this->get_row($row, $item, $vars);
+      return $row;
+    }, (array)$rows);
+
+    $tree = list_to_tree($rows, $this->_table->hierarchical_keys[0], $this->_table->hierarchical_keys[1]);
+    $_API_LOGGER->debug(__METHOD__, array('var' => 'execute::list_to_tree', 'value'  => json_encode($tree), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
+
+    return [
+      "tree" => empty($rows) ? $rows : $tree[0]['children'][0],
+      "rows" => $rows,
+      "total" => sizeof($rows)
+    ];
+  }
+  function select_tree(array $vars)
+  {
+    global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
+    $this->set__table(json_decode(file_get_contents($this->_table_path), true));
+    $vars = $this->before(__FUNCTION__, $vars);
+
+    $result = $this->execute_select_tree($vars);
     $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
     return $result;
   }
