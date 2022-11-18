@@ -96,4 +96,4 @@ class AutoQuoteItem extends AutometeItem
   }
 }
 
-// $_AUTOMATE->insert(new AutoQuoteItem());
+$_AUTOMATE->insert(new AutoQuoteItem());
