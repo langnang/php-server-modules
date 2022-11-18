@@ -135,45 +135,6 @@ class RootController extends RootModel
     return $result;
   }
 
-  function upload_list($vars)
-  {
-    if (!is_dir(__DIR__ . '/../../../.tmp')) {
-      mkdir(__DIR__ . '/../../../.tmp');
-    }
-    $file = $vars['_files'];
-    foreach ($vars['_files'] as $file) {
-      // $content = file_get_contents($file['tmp_name']);
-      if (!move_uploaded_file($file['tmp_name'], __DIR__ . '/../../../.tmp/' . $file['name'])) {
-        throw new Exception("Failed to move uploaded file");
-      }
-      $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xls');
-      $reader->setReadDataOnly(TRUE);
-      $spreadsheet = $reader->load(__DIR__ . '/../../../.tmp/' . $file['name']); //载入excel表格
-      $worksheet = $spreadsheet->getActiveSheet();
-      $highestRow = $worksheet->getHighestRow(); // 总行数
-      $highestColumn = $worksheet->getHighestColumn(); // 总列数
-
-      $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
-
-      $lines = $highestRow - 2;
-      if ($lines <= 0) {
-        throw new Exception('Not have enough data.');
-      }
-      $sql = "INSERT INTO `t_student` (`name`, `chinese`, `maths`, `english`) VALUES ";
-
-      for ($row = 3; $row <= $highestRow; ++$row) {
-        $name = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //姓名
-        $chinese = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //语文
-        $maths = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //数学
-        $english = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); //外语
-
-        $sql .= "('$name','$chinese','$maths','$english'),";
-      }
-      $sql = rtrim($sql, ","); //去掉最后一个,号
-      var_dump($sql);
-    }
-    throw new Exception("method not ready.");
-  }
 
   // 执行操作>>批量查询
   function execute_delete_list(array $vars)
@@ -431,16 +392,30 @@ class RootController extends RootModel
     return $result;
   }
 
-  // 执行操作前
+  // 调用方法前
   function before($method, $vars)
   {
     return $vars;
   }
-
+  // 生成语句后
+  function generated($sql, $method, $vars)
+  {
+    return $sql;
+  }
+  // 执行操作后
+  function executed($result, $sql, $method, $vars)
+  {
+    return $result;
+  }
+  // 调用方法后
+  function after($result, $sql, $method, $vars)
+  {
+    return $result;
+  }
   /**
-   * 对查询后的数据处理
+   * 处理查询后的列表对应数据
    */
-  function get_row($row, $fields = [], $vars = [])
+  function get_row($row, $fields, $vars)
   {
     return $row;
   }
@@ -449,5 +424,46 @@ class RootController extends RootModel
    */
   function automate_start()
   {
+  }
+
+  // TODO
+  function upload_list($vars)
+  {
+    if (!is_dir(__DIR__ . '/../../../.tmp')) {
+      mkdir(__DIR__ . '/../../../.tmp');
+    }
+    $file = $vars['_files'];
+    foreach ($vars['_files'] as $file) {
+      // $content = file_get_contents($file['tmp_name']);
+      if (!move_uploaded_file($file['tmp_name'], __DIR__ . '/../../../.tmp/' . $file['name'])) {
+        throw new Exception("Failed to move uploaded file");
+      }
+      $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xls');
+      $reader->setReadDataOnly(TRUE);
+      $spreadsheet = $reader->load(__DIR__ . '/../../../.tmp/' . $file['name']); //载入excel表格
+      $worksheet = $spreadsheet->getActiveSheet();
+      $highestRow = $worksheet->getHighestRow(); // 总行数
+      $highestColumn = $worksheet->getHighestColumn(); // 总列数
+
+      $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+      $lines = $highestRow - 2;
+      if ($lines <= 0) {
+        throw new Exception('Not have enough data.');
+      }
+      $sql = "INSERT INTO `t_student` (`name`, `chinese`, `maths`, `english`) VALUES ";
+
+      for ($row = 3; $row <= $highestRow; ++$row) {
+        $name = $worksheet->getCellByColumnAndRow(1, $row)->getValue(); //姓名
+        $chinese = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); //语文
+        $maths = $worksheet->getCellByColumnAndRow(3, $row)->getValue(); //数学
+        $english = $worksheet->getCellByColumnAndRow(4, $row)->getValue(); //外语
+
+        $sql .= "('$name','$chinese','$maths','$english'),";
+      }
+      $sql = rtrim($sql, ","); //去掉最后一个,号
+      var_dump($sql);
+    }
+    throw new Exception("method not ready.");
   }
 }

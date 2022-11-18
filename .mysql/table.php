@@ -14,7 +14,7 @@ class MySqlTable extends RootModel
    */
   public $catalog;
   /**
-   * @OA\Property(default=NULL, title="数据库名")
+   * @OA\Property(default=NULL, title="名称")
    * @var string
    */
   public $schema;
@@ -382,12 +382,12 @@ VALUES
   (select @pids :=  {$parent}) t2
 ) t3 where ischild != 0 ORDER BY {$child_key}, {$parent_key}";
   }
-  // 生成
+  // TODO 生成
   function generate_select_concat(array $columns)
   {
     return "SELECT *, CONCAT FROM `{$this->name}`";
   }
-  // 生成
+  // TODO 生成
   function generate_select_group_concat(array $columns)
   {
     return "SELECT *, CONCAT('[', GROUP_CONCAT(`cid`, ','), ']') AS `cids` FROM `{$this->name}` GROUP BY "
@@ -396,6 +396,7 @@ VALUES
         return $t . ", `{$v}`";
       }, ""), 2);
   }
+  // 生成随机查询语句
   function generate_select_rand(array $row): string
   {
     return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} ORDER BY RAND() LIMIT 1 ";
@@ -443,7 +444,7 @@ VALUES
   }
 
   /**
-   * 根据列配置，生成数据
+   * 根据列配置，转换生成数据
    */
   function get_row($row)
   {
@@ -466,7 +467,7 @@ VALUES
   function primary_key_exists($row)
   {
     foreach ($this->primary_keys as $name) {
-      if (!isset($row[$name]) || empty($row[$name])) return $name;
+      if (!isset($row[$name]) || (empty($row[$name]) && $row[$name] != 0)) return $name;
     }
     return true;
   }

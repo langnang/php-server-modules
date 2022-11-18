@@ -1,0 +1,20 @@
+{
+  "name": "options",
+  "columns": [
+    {
+      "name": "name",
+      "type": "varchar",
+      "condition": " = '?'"
+    },
+    {
+      "name": "user",
+      "type": "int",
+      "condition": " = ?"
+    },
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "primary_keys": ["name", "user"]
+}

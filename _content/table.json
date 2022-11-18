@@ -1,5 +1,5 @@
 {
-  "name": "_contents",
+  "name": "contents",
   "columns": [
     {
       "name": "cid",
@@ -65,9 +65,7 @@
     }
   ],
   "addition_columns": [],
-  "primary_keys": [
-    "cid"
-  ],
+  "primary_keys": ["cid"],
   "foreign_keys": [],
   "data": []
 }

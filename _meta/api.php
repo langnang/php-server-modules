@@ -17,6 +17,17 @@ $router->addGroup("/meta", function (FastRoute\RouteCollector $router) {
   $controller = new Meta();
   /**
    * @OA\Post(
+   *     path="/api/meta/create",
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(ref="#/components/schemas/MetaModel")
+   *     ),     
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('POST', '/create', [$controller, 'insert_item']);
+  /**
+   * @OA\Post(
    *     path="/api/meta/insert",
    *     @OA\RequestBody(
    *         required=true,

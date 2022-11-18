@@ -3,6 +3,8 @@
 use Langnang\Module\Automate\AutometeItem;
 use Langnang\Module\Meta\Meta;
 use Langnang\Module\Mock\Mock;
+use Langnang\Module\Content\Content;
+use Langnang\Module\Option\Option;
 
 global $_AUTOMATE;
 
@@ -12,30 +14,35 @@ class AutoMockItem extends AutometeItem
   public $name = "Mock";
   function __construct()
   {
-    $meta_controller = new Meta();
-    $rows = $meta_controller->select_count([
-      'type' => "option",
-      'slug' => 'mock.type',
-      'siz' => PHP_INT_MAX,
-      'columns' => ['name']
-    ])['rows'];
+    $option_controller = new Option();
 
-    $this->options = array_map(function ($item) {
-      return $item['name'];
-    }, $rows);
+    $options = $option_controller->select_item([
+      "name" => "mockTypes",
+      "user" => 0,
+    ]);
+    $this->options = $options['value'];
   }
   function start()
   {
     global $_FAKER;
-    $mock_controller = new Mock();
+
+
     $method = $_FAKER->randomElement($this->options);
-    $value = json_encode($_FAKER->{$method}(), JSON_UNESCAPED_UNICODE);
+    $value = $_FAKER->{$method}();
+    if (is_array($value)) $value = json_encode($_FAKER->{$method}(), JSON_UNESCAPED_UNICODE);
+
     $row = [
-      "type" => "{$method}",
+      "title" => "mock-{$method}",
       "text" => $value,
+      "type" => "mock",
+      "status" => "{$method}",
+      "created" => time(),
+      "modified" => time(),
     ];
-    $mock_controller->insert_item($row);
-    return $row;
+
+    $content_controller = new Content();
+    $content = $content_controller->insert_item($row);
+    return array_merge($row, $content);
   }
 }
 

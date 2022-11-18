@@ -20,7 +20,7 @@ class MySqlColumn extends RootModel
    */
   public $schema;
   /**
-   * @OA\Property(default=NULL, title="表名")
+   * @OA\Property(default=NULL, title="数据表名")
    * @var string
    */
   public $table;

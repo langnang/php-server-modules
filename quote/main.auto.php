@@ -1,6 +1,6 @@
 <?php
 
-use Langnang\Module\Api\Api;
+use Langnang\Module\PublicApi\PublicApi;
 use Langnang\Module\Automate\AutometeItem;
 use Langnang\Module\Meta\Meta;
 use Langnang\Module\Mock\Mock;
@@ -14,11 +14,12 @@ class AutoQuoteItem extends AutometeItem
   public $name = "Quote";
   function __construct()
   {
-    $api_controller = new Api();
+    $api_controller = new PublicApi();
     $options = $api_controller->select_list([
-      'slug' => 'quote',
+      'status' => 'quote',
       'size' => PHP_INT_MAX,
     ])['rows'];
+    var_dump($options);
     $this->options = array_map(function ($item) {
       $item['slug'] = explode("_", $item['slug']);
       return $item;
@@ -76,4 +77,4 @@ class AutoQuoteItem extends AutometeItem
   }
 }
 
-$_AUTOMATE->insert(new AutoQuoteItem());
+// $_AUTOMATE->insert(new AutoQuoteItem());

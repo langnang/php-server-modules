@@ -3,7 +3,7 @@ global $_SWAGGER;
 $module = "public-api";
 array_push($_SWAGGER, ["name" => "{$module}", "url" => "/?/api/swagger/{$module}", "path" => __DIR__]);
 
-use Langnang\Module\Api\Api;
+use Langnang\Module\PublicApi\PublicApi;
 use Langnang\Module\Content\Content;
 
 require_once __DIR__ . '/controllers.php';
@@ -15,7 +15,7 @@ require_once __DIR__ . '/controllers.php';
  * )
  */
 $router->addGroup("/public-api", function (FastRoute\RouteCollector $router) {
-  $controller = new Api();
+  $controller = new PublicApi();
   /**
    * @OA\Post(
    *     path="/api/public-api/insert",

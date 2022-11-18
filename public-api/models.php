@@ -1,15 +1,15 @@
 <?php
 
-namespace Langnang\Module\Api;
+namespace Langnang\Module\PublicApi;
 
 use Langnang\Module\Root\RootModel;
 
 require_once __DIR__ . '/../.root/models.php';
 
 /**
- * @OA\Schema(schema="ApiModel")
+ * @OA\Schema(schema="PublicApiModel")
  */
-class ApiModel extends RootModel
+class PublicApiModel extends RootModel
 {
   /**
    * @OA\Property()

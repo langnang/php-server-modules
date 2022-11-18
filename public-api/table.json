@@ -1,5 +1,5 @@
 {
-  "name": "_contents",
+  "name": "public_api_contents",
   "columns": [
     {
       "name": "cid",
@@ -17,8 +17,7 @@
     },
     {
       "name": "slug",
-      "type": "varchar(150)",
-      "condition": "LIKE '?%'"
+      "type": "varchar(150)"
     },
     {
       "name": "created",
@@ -50,13 +49,16 @@
       "type": "varchar(16)",
       "default": "api",
       "comment": "类型",
-      "condition": "= 'api'"
+      "condition": "= 'public_api'"
     },
     {
       "name": "status",
       "type": "varchar(16)",
-      "comment": "状态"
+      "comment": "状态",
+      "condition": "LIKE '?%'"
     },
+    { "name": "method" },
+    { "name": "url" },
     { "name": "parent", "type": "int(10)", "default": 0 }
   ],
   "relations_tables": [{ "name": "_relationships", "columns": [], "primary_keys": ["cid", "mid"], "relation_on": "" }],
