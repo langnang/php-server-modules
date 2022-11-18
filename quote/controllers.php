@@ -2,7 +2,7 @@
 
 namespace Langnang\Module\Quote;
 
-use Langnang\Module\Api\Api;
+use Langnang\Module\PublicApi\PublicApi;
 use Langnang\Module\Root\RootController;
 use WpOrg\Requests\Requests;
 
@@ -17,7 +17,7 @@ class Quote extends RootController
 
   function crawler_rand()
   {
-    $meta_controller = new Api();
+    $meta_controller = new PublicApi();
     $row = $meta_controller->select_rand([
       'slug' => 'quote',
     ]);
