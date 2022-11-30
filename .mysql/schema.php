@@ -35,7 +35,7 @@ class MySqlSchema extends RootModel
   public $sql_path = "";
   // 表中列名与模块参数对应
   static $INFORMATION_SCHEMA = [
-    'TABLE_CATALOG' => 'catalog',
+    'CATALOG_NAME' => 'catalog',
     'SCHEMA_NAME' => 'name',
     'DEFAULT_CHARACTER_SET_NAME' => 'character_set',
     'DEFAULT_COLLATION_NAME' => 'collation',
@@ -47,7 +47,7 @@ class MySqlSchema extends RootModel
       isset($args[$key]) ? $this->__set($name, $args[$key]) : NULL;
     }
   }
-  public $tables;
+  public $tables = [];
   function set_tables(array $tables = [])
   {
     $this->tables = array_reduce($tables, function ($list, $item) {
@@ -56,10 +56,6 @@ class MySqlSchema extends RootModel
       return $list;
     }, []);
   }
-
-
-
-
   /**
    * 查询表列表信息
    */

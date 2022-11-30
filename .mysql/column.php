@@ -205,6 +205,11 @@ class MySqlColumn extends RootModel
    */
   public $condition;
   /**
+   * @OA\Property(default=NULL, format="bool", title="可以修改")
+   * @var boolean
+   */
+  public $modifiable = false;
+  /**
    * @OA\Property(default=NULL, format="string", title="查询排序")
    * @var string
    */
@@ -219,7 +224,7 @@ class MySqlColumn extends RootModel
    */
   function decode_value(string $value)
   {
-    if (in_array($this->get_type()['data_type'], $this->type_options['number'])) return (int)$value;
+    if (in_array($this->get_type()['data_type'], $this->type_options['number'])) $value = (int)$value;
 
     if (empty($this->decode)) return $value;
 
@@ -235,7 +240,7 @@ class MySqlColumn extends RootModel
    */
   function encode_value($value)
   {
-    if (empty($this->decode)) return $value;
+    if (empty($this->encode)) return $value;
 
     return filter($value, $this->encode);
   }

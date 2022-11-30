@@ -15,14 +15,16 @@
       "type": "varchar",
       "length": 255,
       "comment": "名称",
-      "condition": "= '?'"
+      "condition": "= '%?%'",
+      "modifiable": true
     },
     {
       "name": "slug",
       "type": "varchar",
       "length": 255,
       "comment": "编码",
-      "condition": "= '?'"
+      "condition": "= '?'",
+      "modifiable": true
     },
     {
       "name": "type",
@@ -32,14 +34,17 @@
       "default": "option",
       "comment": "类型",
       "condition": "= '?'",
-      "options": ["option", "category", "tag"]
+      "options": ["option", "category", "tag"],
+      "modifiable": true
     },
     {
       "name": "description",
       "type": "varchar",
       "length": 255,
-      "comment": "描述"
+      "comment": "描述",
+      "modifiable": true
     },
+    { "name": "count", "type": "int" },
     {
       "name": "order",
       "type": "int",

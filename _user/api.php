@@ -17,6 +17,39 @@ $router->addGroup("/user", function (FastRoute\RouteCollector $router) {
   $controller = new User();
   /**
    * @OA\Post(
+   *     path="/api/user/login",
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\MediaType(
+   *             mediaType="application/json",
+   *             @OA\Schema(
+   *                 @OA\Property(property="name", type="string", default="guest",),
+   *                 @OA\Property(property="password", type="string", default="123456",),
+   *             )
+   *         )
+   *     ),
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('POST', '/login', [$controller, 'login']);
+  /**
+   * @OA\Post(
+   *     path="/api/user/logout",
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\MediaType(
+   *             mediaType="application/json",
+   *             @OA\Schema(
+   *                 @OA\Property(property="authCode", type="string", default="",),
+   *             )
+   *         )
+   *     ),
+   *     @OA\Response(response="200", description="")
+   * )
+   */
+  $router->addRoute('POST', '/logout', [$controller, 'logout']);
+  /**
+   * @OA\Post(
    *     path="/api/user/insert",
    *     @OA\RequestBody(
    *         required=true,
@@ -64,7 +97,12 @@ $router->addGroup("/user", function (FastRoute\RouteCollector $router) {
    *     path="/api/user/list",
    *     @OA\RequestBody(
    *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/UserModel")
+   *         @OA\MediaType(
+   *             mediaType="application/json",
+   *             @OA\Schema(
+   *                 @OA\Property(property="name", type="string", default="",),
+   *             )
+   *         )
    *     ),
    *     @OA\Response(response="200", description="")
    * )
@@ -72,21 +110,15 @@ $router->addGroup("/user", function (FastRoute\RouteCollector $router) {
   $router->addRoute('POST', '/list', [$controller, 'select_list']);
   /**
    * @OA\Post(
-   *     path="/api/user/tree",
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/UserModel")
-   *     ),
-   *     @OA\Response(response="200", description="")
-   * )
-   */
-  $router->addRoute('POST', '/tree', [$controller, 'select_tree']);
-  /**
-   * @OA\Post(
    *     path="/api/user/info",
    *     @OA\RequestBody(
    *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/UserModel")
+   *         @OA\MediaType(
+   *             mediaType="application/json",
+   *             @OA\Schema(
+   *                 @OA\Property(property="uid", type="int", default="1",),
+   *             )
+   *         )
    *     ),
    *     @OA\Response(response="200", description="")
    * )

@@ -10,23 +10,29 @@ use Langnang\Module\Mock\Mock;
 require_once __DIR__ . '/main.test.php';
 
 
+
+
+$_AUTOMATE = new Automate();
+
+require_path(__DIR__, function ($pathinfo) {
+  return $pathinfo['filename'] === 'main.auto';
+});
+
+var_dump($_POST);
+if (!empty($_POST)) {
+
+  exit;
+}
+
+
 /** 异常终止程序后，1秒后刷新页面 */
-header("refresh: 1");
+header("refresh: 2");
 // 用户Ngix、Apache显示动态进度
 header('X-Accel-Buffering: no');
 //防止执行超时
 set_time_limit(0);
 //清空并关闭输出缓存
 ob_end_clean();
-
-$_AUTOMATE = new Automate();
-
-$meta_controller = new Meta();
-$mock_controller = new Mock();
-
-require_path(__DIR__, function ($pathinfo) {
-  return $pathinfo['filename'] === 'main.auto';
-});
 
 ?>
 
@@ -72,7 +78,7 @@ require_path(__DIR__, function ($pathinfo) {
     flush(); //将输出发送给客户端浏览器，使其可以立即执行服务器端输出的 JavaScript 程序。 
 
     ob_flush();
-    usleep(0.5 * 1000 * 1000);
+    usleep(1 * 1000 * 1000);
   }
   ?>
   <?php

@@ -11,13 +11,28 @@ require_once __DIR__ . '/models.php';
 
 class RootController extends RootModel
 {
-  protected $_class;
+  protected $_driver;
+  protected $_schema;
   protected $_table;
+  protected $_column;
+  protected $_class;
   protected $_table_path;
+  protected $_table_name;
+  protected $allow_insert_columns = [];
+  protected $allow_update_column = [];
   function set__table(array $table)
   {
-    $this->_table = new MySqlTable($table);
+    // if (!file_exists(__DIR__ . '/schema.json')) throw new Exception('no schema.json found.');
+    // else {
+    // }
 
+    // $tables = json_decode(file_get_contents(__DIR__ . '/schema.json'), true);
+
+    // if (!isset($tables[$this->_table_name])) throw new Exception("empty table for {$this->_table_name}");
+
+    // $this->_table = new MySqlTable($tables[$this->_table_name]);
+
+    $this->_table = new MySqlTable($table);
     // if (!$this->table_exists()) {
     // $created = $this->create_table();
     // @warning 后续操作将会导致页码首次请求出现异常，推测为处理延迟
@@ -31,6 +46,9 @@ class RootController extends RootModel
   function get__table()
   {
     return $this->_table;
+  }
+  private function generate_schema_structure()
+  {
   }
   // 执行操作>>检测表是否已存在
   function execute_table_exists()
@@ -168,6 +186,8 @@ class RootController extends RootModel
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
 
+    $this->execute_select_item($vars);
+
     $sql_update_item = $this->_table->generate_update_item($vars);
 
     $_API_LOGGER->debug(__METHOD__, array('var'  => 'sql_update_item', 'value'  => $sql_update_item, "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
@@ -238,11 +258,15 @@ class RootController extends RootModel
   }
 
   // 执行操作>>单条查询
-  function execute_select_item(array $vars)
+  /**
+   * @param array $vars
+   * @param array $columns = []
+   */
+  function execute_select_item(array $vars, array $columns = [])
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
 
-    $sql_select_item = $this->_table->generate_select_item($vars);
+    $sql_select_item = $this->_table->generate_select_item($vars, $columns);
     $_API_LOGGER->debug(__METHOD__, array('var' => 'sql_select_item', 'value'  => $sql_select_item, "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
 
     $row = $_CONNECTION->fetchAssociative($sql_select_item);
@@ -257,15 +281,18 @@ class RootController extends RootModel
 
     return $result;
   }
-  function select_item(array $vars)
+  /**
+   * 
+   */
+  function select_item(array $vars, array $columns = [])
   {
     global $_CONNECTION, $_API_LOGGER, $_API_LOGGER_UUID;
     $vars = $this->before(__FUNCTION__, $vars);
     $this->set__table(json_decode(file_get_contents($this->_table_path), true));
-    // 检测 primary_keys
-    if ($this->_table->primary_key_exists($vars) !== true) throw new Exception("empty primary key ({$this->_table->primary_key_exists($vars)}) value.");
+    // 检测 primary_keys || columns
+    if ($this->_table->columns_exist($vars, $columns) !== true) throw new Exception("empty primary key ({$this->_table->columns_exist($vars,$columns)}) value.");
 
-    $result = $this->execute_select_item($vars);
+    $result = $this->execute_select_item($vars, $columns);
     $_API_LOGGER->debug(__METHOD__, array('var'  => 'result', 'value'  => json_encode($result), "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
     return $result;
   }
@@ -407,6 +434,9 @@ class RootController extends RootModel
   {
     return $result;
   }
+  function execute_sql($sqls)
+  {
+  }
   // 调用方法后
   function after($result, $sql, $method, $vars)
   {
@@ -418,6 +448,11 @@ class RootController extends RootModel
   function get_row($row, $fields, $vars)
   {
     return $row;
+  }
+  protected function logger($var, $value)
+  {
+    global $_API_LOGGER, $_API_LOGGER_UUID;
+    $_API_LOGGER->debug(__METHOD__, array('var'  => $var, 'value'  => $value, "uuid" => $_API_LOGGER_UUID, "timestamp" => timestamp()));
   }
   /**
    * 运行自动化任务

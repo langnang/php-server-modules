@@ -53,4 +53,22 @@ class MySql extends RootModel
   {
     return "SELECT * FROM `information_schema`.`SCHEMATA`;";
   }
+
+  function generate_select_tables($schemas = [])
+  {
+    return "SELECT * FROM `information_schema`.`TABLES` " . (empty($schemas) ? "" : "WHERE `TABLE_SCHEMA` IN (" .
+      substr(array_reduce($schemas, function ($carry, $item) {
+        return "$carry, '$item'";
+      }, ""), 2)
+      . ")") . ";";
+  }
+
+  function generate_select_columns($schemas = [])
+  {
+    return "SELECT * FROM `information_schema`.`COLUMNS` " . (empty($schemas) ? "" : "WHERE `TABLE_SCHEMA` IN (" .
+      substr(array_reduce($schemas, function ($carry, $item) {
+        return "$carry, '$item'";
+      }, ""), 2)
+      . ")") . ";";
+  }
 }

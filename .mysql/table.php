@@ -160,9 +160,14 @@ class MySqlTable extends RootModel
     $indexes = [];
     // 数组列排序
     $column_positions = [];
-    $columns = array_reduce($columns, function ($table, $item) use (&$primary_keys, &$indexes, &$column_positions) {
+    // 可以修改的列
+    $column_modifiable = [];
+
+    $columns = array_reduce($columns, function ($table, $item) use (&$primary_keys, &$indexes, &$column_positions, &$column_modifiable) {
       $column = new MySqlColumn($item);
       $table[$column->name] = $column;
+
+      if ($column->modifiable == true) array_push($column_modifiable, $column->name);
 
       $column_positions[$column->name] = $column->position;
       switch ($column->key) {
@@ -183,8 +188,10 @@ class MySqlTable extends RootModel
     }
 
     $this->columns = $column_positions;
-    // if (!empty($primary_keys)) $this->primary_keys = $primary_keys;
+    if (!empty($primary_keys)) $this->primary_keys = $primary_keys;
     $this->indexes = $indexes;
+
+    $this->modifiable_keys = $column_modifiable;
   }
   /**
    * 关联表
@@ -209,6 +216,10 @@ class MySqlTable extends RootModel
   {
     return $this->primary_keys;
   }
+  /**
+   * 根据列结构生成可修改列
+   */
+  protected $modifiable_keys = [];
   /**
    * 用于查询树形数据的层次键
    * 子健，父键
@@ -342,8 +353,13 @@ VALUES
     return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} {$this->generate_sort_order()} LIMIT {$size} OFFSET {$offset} ";
   }
   // 生成单条查表语句
-  function generate_select_item($row): string
+  function generate_select_item($row, $columns = []): string
   {
+    if (empty($columns)) $columns = $this->primary_keys;
+    $row = array_reduce($columns, function ($carry, $item) use ($row) {
+      $carry[$item] = $row[$item];
+      return $carry;
+    }, []);
     return "SELECT * FROM `{$this->name}` {$this->generate_where_condition($row)} {$this->generate_sort_order()} LIMIT 1 ";
   }
   /**
@@ -455,21 +471,30 @@ VALUES
     }
     return $result;
   }
-  // 删除关键字对应的值
-  function unset_primary_keys($row)
+  function unset_columns($row, $columns = [])
   {
-    foreach ($this->primary_keys as $name) {
+    foreach ($columns as $name) {
       unset($row[$name]);
     }
     return $row;
   }
+  // 删除关键字对应的值
+  function unset_primary_keys($row)
+  {
+    return $this->unset_columns($row, $this->primary_keys);
+  }
+  function columns_exist($row, $columns = [])
+  {
+    foreach ($columns as $name) {
+      // 未声明变量 或者 （变量为空且不为零）
+      if (!isset($row[$name]) || (empty($row[$name]) && $row[$name] !== 0)) return $name;
+    }
+    return true;
+  }
   // 检测关键字是否存在
   function primary_key_exists($row)
   {
-    foreach ($this->primary_keys as $name) {
-      if (!isset($row[$name]) || (empty($row[$name]) && $row[$name] != 0)) return $name;
-    }
-    return true;
+    return $this->columns_exist($row, $this->primary_keys);
   }
   /**
    * 查询表结构

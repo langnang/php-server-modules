@@ -15,27 +15,55 @@ class UserModel extends RootModel
    * @OA\Property()
    * @var int
    */
-  public $id;
+  public $uid;
   /**
    * @OA\Property()
    * @var string
    */
-  public $channel;
-  /**
-   * @OA\Property()
-   * @var int
-   */
-  public $level;
+  public $name;
   /**
    * @OA\Property()
    * @var string
    */
-  public $message;
+  public $password;
+  /**
+   * @OA\Property()
+   * @var string
+   */
+  public $mail;
   /**
    * @OA\Property()
    * @var int
    */
-  public $time;
-  public $username;
-  public $userid;
+  public $url;
+  /**
+   * @OA\Property()
+   * @var string
+   */
+  public $screenName;
+  /**
+   * @OA\Property()
+   * @var int
+   */
+  public $created;
+  /**
+   * @OA\Property()
+   * @var int
+   */
+  public $activated;
+  /**
+   * @OA\Property()
+   * @var int
+   */
+  public $logged;
+  /**
+   * @OA\Property()
+   * @var string
+   */
+  public $group;
+  /**
+   * @OA\Property()
+   * @var string
+   */
+  public $authCode;
 }
